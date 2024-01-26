@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class RestemulatorApplication {
+public class ExtemulatorApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(RestemulatorApplication.class, args);
+		SpringApplication.run(ExtemulatorApplication.class, args);
 	}
 
 }

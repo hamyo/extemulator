@@ -28,25 +28,42 @@ public class DadataService {
     private final ResponseService responseService;
     private static final String SERVICE_NAME = "dadata";
 
-    @SneakyThrows
     @PostMapping(value = "findById/party", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Поиск организаций по ИНН")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "json с ИНН",
+            content = {@Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    examples = {@ExampleObject(value = "{\"query\": \"231515152622\"}")})})
     @ApiResponse(responseCode = "200", description = "Ответ с данными организаций")
     @ApiResponse(responseCode = "404", description = "Ответ если не удалось найти ответ эмулятора")
     public ResponseEntity<String> findByIdParty(
-            @RequestBody
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    description = "json с ИНН",
-                    content = {@Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            examples = {@ExampleObject(value = "{query: 231515152622}")})})
-            String message) {
-        log.info("dadata party started: message={}", message);
+            @RequestBody String message) {
+        return find(message, "party");
+    }
+
+    @PostMapping(value = "findById/bank", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Поиск банка по БИК")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "json с БИК",
+            content = {@Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    examples = {@ExampleObject(value = "{\"query\": \"231515152622\"}")})})
+    @ApiResponse(responseCode = "200", description = "Ответ с данными организаций")
+    @ApiResponse(responseCode = "404", description = "Ответ если не удалось найти ответ эмулятора")
+    public ResponseEntity<String> findByIdBank(
+            @RequestBody String message) {
+        return find(message, "bank");
+    }
+
+    @SneakyThrows
+    private ResponseEntity<String> find(String message, String method) {
+        log.info("dadata {} started: message={}", method, message);
         Map<String, String> params = FormatUtils.JSON_MAPPER.readValue(message, Map.class);
         String paramKey = "[" + params.getOrDefault("query", "") + "]";
 
-        Response response = responseService.getResponse(SERVICE_NAME, "party", paramKey);
-        log.info("dadata party finished");
+        Response response = responseService.getResponse(SERVICE_NAME, method, paramKey);
+        log.info("dadata {} finished", method);
         return response == null ?
                 ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
@@ -54,24 +71,5 @@ public class DadataService {
                 ResponseEntity
                         .status(response.getSettings().getResponseCode())
                         .body(response.getData());
-    }
-
-    @SneakyThrows
-    @PostMapping(value = "findById/bank", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Поиск банка по БИК")
-    @ApiResponse(responseCode = "200", description = "Ответ с данными организаций")
-    @ApiResponse(responseCode = "404", description = "Ответ если не удалось найти ответ эмулятора")
-    public ResponseEntity<String> findByIdBank(
-            @RequestBody @Parameter(description = "json с БИК", example = "{\"query\": \"231515152622\"}")
-            String message) {
-        log.info("dadata bank started: message={}", message);
-        Map<String, String> params = FormatUtils.JSON_MAPPER.readValue(message, Map.class);
-        String paramKey = "[" + params.getOrDefault("query", "") + "]";
-
-        Response response = responseService.getResponse(SERVICE_NAME, "bank", paramKey);
-        log.info("dadata bank finished");
-        return ResponseEntity
-                .status(response.getSettings().getResponseCode())
-                .body(response.getData());
     }
 }
