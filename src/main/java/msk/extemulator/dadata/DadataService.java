@@ -32,6 +32,7 @@ public class DadataService {
     @Operation(summary = "Поиск организаций по ИНН")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "json с ИНН",
+            required = true,
             content = {@Content(
                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                     examples = {@ExampleObject(value = "{\"query\": \"231515152622\"}")})})
@@ -46,6 +47,7 @@ public class DadataService {
     @Operation(summary = "Поиск банка по БИК")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "json с БИК",
+            required = true,
             content = {@Content(
                     mediaType = MediaType.APPLICATION_JSON_VALUE,
                     examples = {@ExampleObject(value = "{\"query\": \"231515152622\"}")})})
