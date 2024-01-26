@@ -1,0 +1,14 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/rest-emulator
+    hikari:
+      maximum-pool-size: 10
+
+#  jpa:
+#    show-sql: true

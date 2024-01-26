@@ -1,0 +1,49 @@
+<configuration scan="true" scanPeriod="30 seconds">
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/log/extemulator.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>/log/extemulator.log.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <maxFileSize>20MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} %level [%thread] [%logger{10}] %msg%ex%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="file_error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/log/extemulator-error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>/log/extemulator-error.log.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+            <maxFileSize>20MB</maxFileSize>
+            <maxHistory>40</maxHistory>
+            <totalSizeCap>40MB</totalSizeCap>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} %level [%thread] [%logger{10}] %msg%ex%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} %-5level [%thread] [%logger{10}] %msg%ex%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.hibernate.SQL" level="DEBUG"/>
+    <logger name="org.hibernate.orm.jdbc.bind" level="TRACE"/>
+
+<!--    <logger name="org.hibernate.type" level="TRACE" />-->
+<!--    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE"/>-->
+
+    <root level="info">
+        <appender-ref ref="file"/>
+        <appender-ref ref="file_error"/>
+        <appender-ref ref="console"/>
+    </root>
+</configuration>
